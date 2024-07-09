@@ -8,7 +8,11 @@ export function MyForm() {
         setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     }
     function generateURL() {
-        return baseURL + "?" + urlEncodeObject(formData);
+        const url = new URL(baseURL);
+        for (const key in formData) {
+            url.searchParams.append(key, formData[key]);
+        }
+        return url.toString();
     }
     async function handleSubmit() {
         const url = generateURL();
@@ -36,24 +40,6 @@ export function MyForm() {
                 type: "success",
             }
         );
-    }
-
-    function urlEncodeObject(obj) {
-        // Create an empty array to store encoded key-value pairs
-        const params = [];
-
-        // Loop through each key-value pair in the object
-        for (const key in obj) {
-            // Encode both the key and value using encodeURIComponent
-            const encodedKey = encodeURIComponent(key);
-            const encodedValue = encodeURIComponent(obj[key]);
-
-            // Create a parameter string with encoded key and value
-            params.push(`${encodedKey}=${encodedValue}`);
-        }
-
-        // Join the encoded parameter strings with "&"
-        return params.join("&");
     }
 
     return (
